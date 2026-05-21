@@ -5,124 +5,138 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Doc Generator</title>
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0A0A0F;--surface:#12121A;--surface2:#1A1A26;
-  --border:#2A2A3E;--accent:#6EE7B7;--accent2:#818CF8;
-  --text:#F0F0FF;--muted:#6B7280;--danger:#F87171;
+  --bg:#F7F8FA;--surface:#FFFFFF;--surface2:#F0F2F5;
+  --border:#E2E5EC;--accent:#059669;--accent-light:#D1FAE5;
+  --accent2:#6366F1;--accent2-light:#EEF2FF;
+  --text:#111827;--muted:#6B7280;--danger:#DC2626;
+  --shadow:0 1px 4px rgba(0,0,0,0.08);
 }
-body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:80px}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
-.orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0}
-.orb1{width:300px;height:300px;background:rgba(110,231,183,0.06);top:-100px;right:-50px}
-.orb2{width:250px;height:250px;background:rgba(129,140,248,0.05);bottom:100px;left:-80px}
 
-.page{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:0 0 20px;animation:fadeUp .5s ease both}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+/* Dark mode */
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#0F0F14;--surface:#1A1A24;--surface2:#22222E;
+    --border:#2E2E3E;--accent:#34D399;--accent-light:rgba(52,211,153,0.1);
+    --accent2:#818CF8;--accent2-light:rgba(129,140,248,0.1);
+    --text:#F0F0FF;--muted:#9CA3AF;--danger:#F87171;
+    --shadow:0 1px 4px rgba(0,0,0,0.3);
+  }
+}
 
-.topbar{padding:20px 20px 0;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
-.brand{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--accent);text-transform:uppercase}
-.by-bird{font-size:11px;color:var(--muted);font-weight:300;letter-spacing:.05em}
-.by-bird span{color:var(--accent2);font-weight:500}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:88px;font-size:15px}
 
-.user-card{margin:0 20px 24px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden}
-.user-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(110,231,183,0.04) 0%,transparent 60%)}
-.avatar{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--accent);flex-shrink:0;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:18px}
-.user-info-name{font-size:14px;font-weight:500;color:var(--text)}
-.user-info-label{font-size:11px;color:var(--muted);margin-top:2px}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);margin-left:auto;box-shadow:0 0 8px var(--accent);animation:pulse 2s ease infinite;flex-shrink:0}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.page{max-width:480px;margin:0 auto;padding:0 0 20px;animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
-.section{padding:0 20px;margin-bottom:20px}
-.section-label{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+/* Header */
+.header{background:var(--accent);padding:20px 20px 24px;position:relative;overflow:hidden}
+.header::after{content:'';position:absolute;bottom:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.08)}
+.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.brand{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:.08em;color:rgba(255,255,255,0.8);text-transform:uppercase}
+.by-bird{font-size:11px;color:rgba(255,255,255,0.6)}
+.by-bird span{color:white;font-weight:600}
+.header h1{font-size:20px;font-weight:600;color:white;margin-bottom:2px}
+.header p{font-size:13px;color:rgba(255,255,255,0.7)}
+
+/* User card */
+.user-card{margin:0 16px;margin-top:-14px;background:var(--surface);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);border:1px solid var(--border);position:relative;z-index:2}
+.avatar{width:40px;height:40px;border-radius:50%;border:2px solid var(--accent);flex-shrink:0;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden}
+.user-info-name{font-size:14px;font-weight:600;color:var(--text)}
+.user-info-label{font-size:12px;color:var(--muted);margin-top:1px}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);margin-left:auto;box-shadow:0 0 6px var(--accent);animation:pulse 2s ease infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Section */
+.section{padding:0 16px;margin-top:20px}
+.section-label{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
+/* Chips */
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
-.chip{padding:7px 13px;border-radius:8px;border:1px solid var(--border);background:var(--surface);font-family:'Sarabun',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap}
-.chip:active,.chip.active{border-color:var(--accent);background:rgba(110,231,183,0.08);color:var(--accent)}
+.chip{padding:10px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);font-family:'Sarabun',sans-serif;font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;font-weight:400}
+.chip:active,.chip.active{border-color:var(--accent);background:var(--accent-light);color:var(--accent);font-weight:500}
 .chip.ai-pick{border-color:var(--accent2);color:var(--accent2)}
-.chip.ai-pick.active{background:rgba(129,140,248,0.08)}
+.chip.ai-pick.active{background:var(--accent2-light);border-color:var(--accent2);color:var(--accent2)}
 
-.field{margin-bottom:12px}
-.field label{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-bottom:7px;letter-spacing:.02em}
+/* Field */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px}
 .field label .req{color:var(--accent);margin-left:2px}
-.field label .opt{font-size:11px;color:#3A3A55;margin-left:4px;font-weight:300}
-.field input,.field textarea,.field select{width:100%;padding:13px 15px;border:1px solid var(--border);border-radius:12px;font-family:'Sarabun',sans-serif;font-size:14px;color:var(--text);background:var(--surface);transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;line-height:1.5}
-.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:rgba(110,231,183,0.5);box-shadow:0 0 0 3px rgba(110,231,183,0.06);background:var(--surface2)}
-.field input::placeholder,.field textarea::placeholder{color:#3A3A55;font-weight:300}
-.field textarea{resize:vertical;min-height:100px}
-.field select option{background:var(--surface2);color:var(--text)}
+.field label .opt{font-size:12px;color:var(--muted);font-weight:400;margin-left:4px}
+.field input,.field textarea{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:'Sarabun',sans-serif;font-size:15px;color:var(--text);background:var(--surface);transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;line-height:1.5}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted);font-weight:300;font-size:14px}
+.field textarea{resize:vertical;min-height:110px}
 
 .custom-type-field{display:none;margin-top:10px}
 .custom-type-field.show{display:block}
-.agency-input-wrap{transition:opacity .2s}
+.agency-input-wrap{transition:opacity .2s;margin-top:10px}
 .agency-input-wrap.hidden{opacity:.3;pointer-events:none}
 
 /* Photo toggle */
 .photo-toggle{display:flex;gap:8px}
-.photo-btn{flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface);font-family:'Sarabun',sans-serif;font-size:13px;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s}
-.photo-btn.active{border-color:var(--accent);background:rgba(110,231,183,0.08);color:var(--accent)}
+.photo-btn{flex:1;padding:12px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface);font-family:'Sarabun',sans-serif;font-size:14px;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s}
+.photo-btn.active{border-color:var(--accent);background:var(--accent-light);color:var(--accent);font-weight:500}
 
 /* Sticky submit */
-.sticky-submit{
-  position:fixed;bottom:0;left:0;right:0;z-index:100;
-  background:linear-gradient(to top, var(--bg) 60%, transparent);
-  padding:16px 20px 20px;
-  max-width:480px;margin:0 auto;
-}
-.submit-btn{width:100%;padding:16px;background:var(--accent);color:#0A0A0F;border:none;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:.02em;transition:opacity .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 24px rgba(110,231,183,0.25)}
-.submit-btn:active{transform:scale(0.98);opacity:.85}
-.submit-btn:disabled{opacity:.4;cursor:not-allowed}
+.sticky-submit{position:fixed;bottom:0;left:0;right:0;z-index:100;background:linear-gradient(to top,var(--bg) 70%,transparent);padding:12px 16px 20px;max-width:480px;margin:0 auto}
+.submit-btn{width:100%;padding:16px;background:var(--accent);color:white;border:none;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(5,150,105,0.35)}
+.submit-btn:active{transform:scale(0.98);opacity:.9}
 
-.error-msg{margin:0 20px 12px;padding:10px 14px;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:10px;font-size:13px;color:var(--danger);display:none}
+.error-msg{margin:0 16px 12px;padding:12px 16px;background:rgba(220,38,38,0.06);border:1.5px solid rgba(220,38,38,0.2);border-radius:10px;font-size:14px;color:var(--danger);display:none}
 .error-msg.show{display:block}
 
-/* Confirm modal */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 .modal-overlay.show{display:flex}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:24px 20px 32px;width:100%;max-width:480px;animation:slideUp .25s ease}
+.modal{background:var(--surface);border-radius:20px 20px 0 0;padding:24px 20px 32px;width:100%;max-width:480px;animation:slideUp .25s ease;border-top:1px solid var(--border)}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:none}}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
 .modal-title{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;margin-bottom:16px;color:var(--text)}
-.modal-row{display:flex;gap:8px;margin-bottom:10px;align-items:flex-start}
-.modal-key{font-size:11px;color:var(--muted);min-width:80px;padding-top:2px;flex-shrink:0}
-.modal-val{font-size:13px;color:var(--text);line-height:1.5}
+.modal-row{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.modal-key{font-size:12px;color:var(--muted);min-width:76px;padding-top:2px;flex-shrink:0;font-weight:500}
+.modal-val{font-size:14px;color:var(--text);line-height:1.5}
 .modal-divider{height:1px;background:var(--border);margin:16px 0}
 .modal-actions{display:flex;gap:10px}
-.modal-cancel{flex:1;padding:14px;background:transparent;border:1px solid var(--border);border-radius:12px;font-family:'Sarabun',sans-serif;font-size:14px;color:var(--muted);cursor:pointer}
-.modal-confirm{flex:2;padding:14px;background:var(--accent);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:#0A0A0F;cursor:pointer}
+.modal-cancel{flex:1;padding:14px;background:var(--surface2);border:none;border-radius:12px;font-family:'Sarabun',sans-serif;font-size:14px;color:var(--muted);cursor:pointer}
+.modal-confirm{flex:2;padding:14px;background:var(--accent);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;color:white;cursor:pointer}
 
 /* Loading / Success */
-.fullpage{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;padding:40px 20px;text-align:center;position:relative;z-index:1}
+.fullpage{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;padding:40px 20px;text-align:center}
 .fullpage.show{display:flex}
 .loader{width:48px;height:48px;position:relative;margin-bottom:20px}
-.loader::before,.loader::after{content:'';position:absolute;border-radius:50%;border:2px solid transparent}
+.loader::before,.loader::after{content:'';position:absolute;border-radius:50%;border:2.5px solid transparent}
 .loader::before{inset:0;border-top-color:var(--accent);animation:spin .8s linear infinite}
-.loader::after{inset:8px;border-top-color:var(--accent2);animation:spin .6s linear infinite reverse}
+.loader::after{inset:10px;border-top-color:var(--accent2);animation:spin .6s linear infinite reverse}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-text{font-size:14px;color:var(--muted);line-height:1.6}
-.success-ring{width:72px;height:72px;border-radius:50%;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:20px;box-shadow:0 0 30px rgba(110,231,183,0.15);position:relative}
-.success-ring::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(110,231,183,0.15)}
-.success-check{font-size:28px}
-.success h2{font-family:'DM Sans',sans-serif;font-size:20px;font-weight:600;margin-bottom:10px}
-.success p{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:28px}
-.reset-btn{padding:12px 28px;background:transparent;border:1px solid var(--border);border-radius:10px;font-family:'Sarabun',sans-serif;font-size:14px;color:var(--muted);cursor:pointer}
+.loading-text{font-size:15px;color:var(--muted);line-height:1.7}
 
-.footer{text-align:center;padding:24px 20px 0;font-size:11px;color:#2A2A3E;letter-spacing:.05em}
+.success-icon{width:72px;height:72px;border-radius:50%;background:var(--accent-light);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:30px}
+.success h2{font-family:'DM Sans',sans-serif;font-size:20px;font-weight:600;margin-bottom:10px;color:var(--text)}
+.success p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:28px}
+.reset-btn{padding:13px 28px;background:var(--surface2);border:none;border-radius:12px;font-family:'Sarabun',sans-serif;font-size:14px;color:var(--muted);cursor:pointer}
+
+.footer{text-align:center;padding:24px 20px 0;font-size:11px;color:var(--muted);letter-spacing:.05em;opacity:.5}
 </style>
 </head>
 <body>
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
 
-<!-- FORM PAGE -->
 <div class="page" id="formPage">
-  <div class="topbar">
-    <div class="brand">Doc Generator</div>
-    <div class="by-bird">by <span>BIRD</span></div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-top">
+      <div class="brand">Doc Generator</div>
+      <div class="by-bird">by <span>BIRD</span></div>
+    </div>
+    <h1>สร้างหนังสือราชการ</h1>
   </div>
 
+  <!-- User card -->
   <div class="user-card">
     <div class="avatar" id="userAvatar">👤</div>
     <div>
@@ -158,7 +172,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="section-label">รายละเอียด</div>
     <div class="field">
       <label>รายละเอียดปัญหา <span class="req">*</span></label>
-      <textarea id="problemDetail" placeholder="อธิบายปัญหาที่พบ เช่น ถนนมีหลุมบ่อขนาดใหญ่หลายจุด..."></textarea>
+      <textarea id="problemDetail" placeholder="อธิบายปัญหาที่พบ เช่น ถนนมีหลุมบ่อขนาดใหญ่หลายจุด ส่งผลกระทบต่อผู้ใช้รถ..."></textarea>
     </div>
     <div class="field">
       <label>สถานที่เกิดเหตุ <span class="req">*</span></label>
@@ -166,7 +180,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     </div>
     <div class="field">
       <label>พื้นที่ที่ลงพื้นที่ <span class="opt">(ไม่บังคับ)</span></label>
-      <input type="text" id="area" placeholder="เช่น แขวงสามวาตะวันตก / ชุมชนไอดีไซน์">
+      <input type="text" id="area" placeholder="เช่น แขวงสามวาตะวันตก">
     </div>
   </div>
 
@@ -176,7 +190,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="chips" id="occurrenceChips">
       <button class="chip" onclick="selectOccurrence(this,'เพิ่งเกิดขึ้น')">🆕 เพิ่งเกิด</button>
       <button class="chip" onclick="selectOccurrence(this,'เกิดมาสักพักแล้ว')">⏳ สักพักแล้ว</button>
-      <button class="chip active" onclick="selectOccurrence(this,'เกิดซ้ำหลายครั้ง')">🔁 เกิดซ้ำหลายครั้ง</button>
+      <button class="chip active" onclick="selectOccurrence(this,'เกิดซ้ำหลายครั้ง')">🔁 เกิดซ้ำ</button>
     </div>
   </div>
 
@@ -198,11 +212,12 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <button class="chip" onclick="selectAgency(this,'ผู้อำนวยการสำนักการโยธา')">🏗 สำนักการโยธา</button>
       <button class="chip" onclick="selectAgency(this,'ผู้อำนวยการสำนักการจราจรและขนส่ง')">🚦 จราจรและขนส่ง</button>
       <button class="chip" onclick="selectAgency(this,'ผู้อำนวยการสำนักสิ่งแวดล้อม')">🌿 สิ่งแวดล้อม</button>
+      <button class="chip" onclick="selectAgency(this,'other')">✏️ อื่นๆ</button>
     </div>
     <div class="agency-input-wrap hidden" id="agencyInputWrap">
       <div class="field">
-        <label>หน่วยงาน <span class="req">*</span></label>
-        <input type="text" id="agency" placeholder="หรือพิมพ์ชื่อหน่วยงานเอง">
+        <label>ระบุหน่วยงาน <span class="req">*</span></label>
+        <input type="text" id="agency" placeholder="พิมพ์ชื่อหน่วยงาน...">
       </div>
     </div>
   </div>
@@ -215,15 +230,16 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 <!-- Sticky Submit -->
 <div class="sticky-submit" id="stickySubmit">
-  <button class="submit-btn" onclick="showConfirm()" id="submitBtn">
-    <span>↗</span> สร้างหนังสือราชการ
+  <button class="submit-btn" onclick="showConfirm()">
+    <span>📄</span> สร้างหนังสือราชการ
   </button>
 </div>
 
 <!-- Confirm Modal -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal">
-    <div class="modal-title">ยืนยันก่อนส่ง</div>
+    <div class="modal-handle"></div>
+    <div class="modal-title">ยืนยันข้อมูลก่อนส่ง</div>
     <div class="modal-row"><div class="modal-key">ปัญหา</div><div class="modal-val" id="c-problem">-</div></div>
     <div class="modal-row"><div class="modal-key">สถานที่</div><div class="modal-val" id="c-location">-</div></div>
     <div class="modal-row"><div class="modal-key">พื้นที่</div><div class="modal-val" id="c-area">-</div></div>
@@ -232,7 +248,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="modal-row"><div class="modal-key">หน่วยงาน</div><div class="modal-val" id="c-agency">-</div></div>
     <div class="modal-divider"></div>
     <div class="modal-actions">
-      <button class="modal-cancel" onclick="closeConfirm()">แก้ไข</button>
+      <button class="modal-cancel" onclick="closeConfirm()">✏️ แก้ไข</button>
       <button class="modal-confirm" onclick="submitForm()">✓ ยืนยันส่ง</button>
     </div>
   </div>
@@ -246,10 +262,10 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 <!-- Success -->
 <div class="fullpage success" id="successPage">
-  <div class="success-ring"><div class="success-check">✓</div></div>
+  <div class="success-icon">✅</div>
   <h2>สร้างเรียบร้อยแล้ว</h2>
   <p>ระบบกำลังประมวลผลและส่งลิงก์<br>กลับให้คุณใน LINE</p>
-  <button class="reset-btn" onclick="resetForm()">สร้างหนังสือฉบับใหม่</button>
+  <button class="reset-btn" onclick="resetForm()">📝 สร้างหนังสือฉบับใหม่</button>
 </div>
 
 <script>
@@ -271,7 +287,7 @@ async function initLiff() {
       document.getElementById('userName').textContent = profile.displayName;
       if (profile.pictureUrl) {
         document.getElementById('userAvatar').innerHTML =
-          `<img src="${profile.pictureUrl}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1.5px solid var(--accent)" alt="">`;
+          `<img src="${profile.pictureUrl}" style="width:100%;height:100%;object-fit:cover" alt="">`;
       }
     } else { liff.login(); }
   } catch(e) { document.getElementById('userName').textContent = 'ผู้ใช้งาน'; }
@@ -291,8 +307,17 @@ function selectAgency(el, value) {
   el.classList.add('active');
   selectedAgency = value;
   const wrap = document.getElementById('agencyInputWrap');
-  if (value === 'auto') { wrap.classList.add('hidden'); document.getElementById('agency').value = ''; }
-  else { wrap.classList.remove('hidden'); document.getElementById('agency').value = value; }
+  if (value === 'auto') {
+    wrap.classList.add('hidden');
+    document.getElementById('agency').value = '';
+  } else if (value === 'other') {
+    wrap.classList.remove('hidden');
+    document.getElementById('agency').value = '';
+    setTimeout(() => document.getElementById('agency').focus(), 100);
+  } else {
+    wrap.classList.remove('hidden');
+    document.getElementById('agency').value = value;
+  }
 }
 
 function selectOccurrence(el, value) {
@@ -328,7 +353,6 @@ function showConfirm() {
   }
   errorMsg.classList.remove('show');
 
-  // Fill confirm modal
   document.getElementById('c-problem').textContent = problemType ? `${problemType}: ${problemDetail}` : problemDetail;
   document.getElementById('c-location').textContent = location;
   document.getElementById('c-area').textContent = document.getElementById('area').value.trim() || '-';
@@ -362,7 +386,7 @@ async function submitForm() {
     area: document.getElementById('area').value.trim() || '',
     occurrence: selectedOccurrence,
     hasPhoto: hasPhoto ? 'มีรูปภาพประกอบ' : 'ไม่มีรูปภาพ',
-    agency: selectedAgency === 'auto' ? 'ให้ AI เลือกหน่วยงานที่เหมาะสม' : document.getElementById('agency').value.trim(),
+    agency: selectedAgency === 'auto' ? 'ให้ AI เลือกหน่วยงานที่เหมาะสม' : selectedAgency === 'other' ? document.getElementById('agency').value.trim() : selectedAgency,
     attachment: hasPhoto ? 'ภาพถ่ายประกอบเรื่องร้องเรียน' : 'ไม่มีสิ่งที่แนบ',
     timestamp: new Date().toISOString()
   };
